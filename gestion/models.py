@@ -22,7 +22,7 @@ class PlatoModel(models.Model):
         auto_now_add=True, db_column='fecha_creacion')
     # Permite evitar la eliminacion de la categoria si es que tiene datos que dependen de ella
     categoria = models.ForeignKey(
-        to=CategoriaModel, on_delete=models.PROTECT, db_column='categoria_id')
+        to=CategoriaModel, on_delete=models.PROTECT, db_column='categoria_id', related_name='platos')
 
     class Meta:
         db_table = 'platos'
