@@ -4,11 +4,12 @@ from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaPlatosSe
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
-
+from .permisions import SoloAdministradores
 # Aqui es donde vamos a crear toda la logica de la aplicacion
 
 
 class CategoriaApiView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated, SoloAdministradores]
     # Esta es la manera sencilla donde no necesitamos mucha logica
     queryset = CategoriaModel.objects.all()  # Trae info
     serializer_class = CategoriaSerializer  # Convierte la info
@@ -109,4 +110,3 @@ class RegistrarUsuariosApiView(CreateAPIView):
             'msg': 'Usuario creado exitosamente',
             'data': serializador.data
         }, status=201)
-
