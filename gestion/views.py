@@ -1,8 +1,9 @@
-from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView
-from .models import CategoriaModel, PlatoModel
-from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaPlatosSerializer, MostrarPlatoSerializer
+from rest_framework.generics import ListCreateAPIView, DestroyAPIView, ListAPIView, CreateAPIView
+from .models import CategoriaModel, PlatoModel, UsuariosModel
+from .serializers import CategoriaSerializer, PlatoSerializer, CategoriaPlatosSerializer, MostrarPlatoSerializer, RegistroUsuarioSerializer
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 
 # Aqui es donde vamos a crear toda la logica de la aplicacion
 
@@ -89,3 +90,23 @@ class ListarCategoriasApiView(ListAPIView):
             'msg': 'Se logro encontrar el mensaje correctamente',
             'data': serializer.data,
         })
+
+
+class RegistrarUsuariosApiView(CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        serializador = RegistroUsuarioSerializer(data=request.data)
+        validacion = serializador.is_valid()
+        print(f"Resultado enviado -> {serializador.validated_data}")
+        if validacion is False:
+            return Response(data={
+                'message': 'Error en la creacion del usuario',
+                'error': serializador.errors
+            })
+        nuevoUsuario = UsuariosModel(**serializador.validated_data)
+        nuevoUsuario.set_password(serializador.validated_data.get('password'))
+        nuevoUsuario.save()
+        return Response(data={
+            'msg': 'Usuario creado exitosamente',
+            'data': serializador.data
+        }, status=201)
+

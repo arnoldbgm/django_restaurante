@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CategoriaModel, PlatoModel
+from .models import CategoriaModel, PlatoModel, UsuariosModel
 
 # Trae toda la informacion convertida en un json es como un puetne
 
@@ -32,3 +32,15 @@ class CategoriaPlatosSerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoriaModel
         fields = '__all__'
+
+
+class RegistroUsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UsuariosModel
+        fields = '__all__'
+        #Indico que no quiero que se me devuelva la contraseña
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
